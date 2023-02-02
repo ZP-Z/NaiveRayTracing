@@ -4,6 +4,17 @@
 
 #include <iostream>
 
+bool hit_sphere(const vec3& center, double radius, const ray& r)
+{
+	/** (Ray(t) - Center).length() = radius, solve t.
+	*	(ori + t * dir - center) * (ori + t * dir - center) = r^2
+	*	so we get: t^2 * 
+	*/
+	vec3 oc = r.origin() - center;
+	auto a = dot(r.direction(), r.direction());
+	auto b = 2.0 * dot(oc, r.direction());
+}
+
 vec3 ray_color(const ray& r)
 {
 	vec3 unit_directuion = normalize(r.direction());
