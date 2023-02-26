@@ -7,6 +7,7 @@ struct hit_record {
     double t;
     bool front_face;
 
+	// check if normal and ray's direction is the same, prevent the back of a geometry
     inline void set_face_normal(const ray& r, const vec3& outward_normal)
     {
         front_face = dot(r.direction(), outward_normal) < 0;
