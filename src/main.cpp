@@ -3,6 +3,7 @@
 #include "vec3.h"
 
 #include <iostream>
+#include <fstream>
 
 double hit_sphere(const vec3& center, double radius, const ray& r)
 {
@@ -58,7 +59,7 @@ vec3 ray_color(const ray& r)
 	return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
 }
 
-int main()
+int main(int argc, char* argv)
 {
     // Image
 	const auto aspect_ratio = 16.0 / 9.0;
@@ -76,22 +77,78 @@ int main()
 	auto lower_left_corner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focal_length);
 
     // Render
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-
-	for (int j = image_height - 1; j >= 0; --j) {
-		std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
-		for (int i = 0; i < image_width; ++i) {
-
-			auto u = double(i) / (image_width - 1);
-			auto v = double(j) / (image_height - 1);
-			ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-			vec3 pixel_color = ray_color(r);
-
-			//vec3 pixel_color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
-			write_color(std::cout, pixel_color);
+	if (argc > 1)
+	{
+		std::ofstream out(argv);
+		if (!out)
+		{
+			std::cout << "Could not open file " << argv << std::endl;
+			return -1;
 		}
+
+		out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+
+		for (int j = image_height - 1; j >= 0; --j) {
+			std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+			for (int i = 0; i < image_width; ++i) {
+
+				auto u = double(i) / (image_width - 1);
+				auto v = double(j) / (image_height - 1);
+				ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+				vec3 pixel_color = ray_color(r);
+
+				//vec3 pixel_color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
+				write_color(out, pixel_color);
+			}
+		}
+		std::cerr << "\nDone.\n";
+		return 0;
 	}
-	std::cerr << "\nDone.\n";
+	else
+	{
+		std::ofstream out("./image.ppm");
+		if (!out)
+		{
+			std::cout << "Could not open file!" << std::endl;
+			return -1;
+		}
+
+		out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+
+		for (int j = image_height - 1; j >= 0; --j) {
+			std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+			for (int i = 0; i < image_width; ++i) {
+
+				auto u = double(i) / (image_width - 1);
+				auto v = double(j) / (image_height - 1);
+				ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+				vec3 pixel_color = ray_color(r);
+
+				//vec3 pixel_color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
+				write_color(out, pixel_color);
+			}
+		}
+		std::cerr << "\nDone.\n";
+		return 0;
+	}
+	
+
+	//std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+
+	//for (int j = image_height - 1; j >= 0; --j) {
+	//	std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+	//	for (int i = 0; i < image_width; ++i) {
+
+	//		auto u = double(i) / (image_width - 1);
+	//		auto v = double(j) / (image_height - 1);
+	//		ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+	//		vec3 pixel_color = ray_color(r);
+
+	//		//vec3 pixel_color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
+	//		write_color(std::cout, pixel_color);
+	//	}
+	//}
+	//std::cerr << "\nDone.\n";
 
     return 0;
 }
