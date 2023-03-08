@@ -5,6 +5,7 @@ project(NaiveRayTracing)
 set (CMAKE_CXX_STANDARD 17)
 
 find_package(Eigen3 CONFIG)
+find_package(TBB CONFIG REQUIRED)
 
 include_directories(src)
 
@@ -21,5 +22,8 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
 
 add_executable(${PROJECT_NAME} src/main.cpp ${M_HEADER} ${M_SOURCE})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE TBB::tbb TBB::tbbmalloc TBB::tbbmalloc_proxy)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES VS_GLOBAL_VcpkgEnabled true)
 set_property (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})

@@ -1,7 +1,13 @@
-# NaiveRayTracing
- 
-build
+# NaiveRayTracing 
 
-./NaiveRayTracing.exe > image.ppm
+install tbb and build
+```
+vcpkg install tbb
+mkdir build
+cd build
+cmake ..
+```
 
-unfinished
+then build, we will get the following output:
+
+![image](./out/image_final.png "render result")
